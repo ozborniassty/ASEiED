@@ -1,0 +1,112 @@
+import math
+
+
+
+class Dijkstra:
+
+    def __init__(self,graph,first_node,last_node):
+
+        self.end_node = last_node
+        self.start_node = first_node
+        self.current_node = first_node
+        self.graph = graph          # self.nodes_dict
+        self.cost_dict = {}
+        self.cost_dict[first_node] = 0
+        self.current_distance = 0
+
+        self.distances = dict.fromkeys(self.graph, math.inf)
+
+
+    def next_iteration(self):
+        neighbours = self.graph[self.current_node]
+        del self.distances[self.current_node]
+
+        for key, value in neighbours.items():
+            try:
+
+                # self.distances2[key] = key
+                # print("node: ", key, "value: ", value)
+
+                if value < self.distances[key]:
+                    self.distances[key] = value + self.current_distance
+
+
+            except:
+                pass
+
+        self.setNewCurrentNode()
+
+        # print(self.cost_dict)
+
+
+
+
+
+
+
+    def setNewDistances(self):
+        pass
+
+
+    def getMinimalDistance(self):
+        minValue =min(self.distances, key=self.distances.get)
+        # print(minValue)
+        self.cost_dict[minValue] = self.distances[minValue]
+        # print(minValue)
+        return minValue
+
+
+    def setNewCurrentNode(self):
+
+        self.current_node = self.getMinimalDistance()
+        self.current_distance = self.distances[self.current_node]
+
+
+
+    def create_road(self):
+        stack = []
+        v = self.end_node
+        stack.append(v)
+
+        print('self.end_node',self.end_node)
+        print('self.start_node',self.start_node)
+        print('self.nodes_dict',self.graph)
+        print('self.cost_dict',self.cost_dict)
+
+        while v is not self.start_node:
+            for key in self.graph[v]:
+                if self.graph[v][key] + self.cost_dict[key] == self.cost_dict[v]:
+                    u = key
+                    stack.append(u)
+                    v = u
+                    break
+        stack.reverse()
+
+        self.road = stack
+        print('self.road',self.road)
+
+
+
+
+
+if __name__ == "__main__":
+    nodes_dict = {
+        'B': {'A': 5, 'D': 1, 'G': 2},
+        'A': {'B': 5, 'D': 3, 'E': 12, 'F': 5},
+        'D': {'B': 1, 'G': 1, 'E': 1, 'A': 3},
+        'G': {'B': 2, 'D': 1, 'C': 2},
+        'C': {'G': 2, 'E': 1, 'F': 16},
+        'E': {'A': 12, 'D': 1, 'C': 1, 'F': 2},
+        'F': {'A': 5, 'E': 2, 'C': 16}}
+
+    graph = Dijkstra(nodes_dict, "B", "C")
+
+    while(graph.distances != {}):
+        try:
+            graph.next_iteration()
+        except:
+            pass
+    graph.create_road()
+
+
+
